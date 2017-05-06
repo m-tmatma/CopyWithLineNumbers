@@ -1,9 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="CopyWithLineNumbers.Masaru Tsuchiyama.b82044d1-5efc-44fc-b75d-5688ceefa5b7" Version="1.0" Language="en-US" Publisher="Masaru Tsuchiyama" />
+    <Identity Id="b82044d1-5efc-44fc-b75d-5688ceefa5b7" Version="1.0" Language="en-US" Publisher="Masaru-Tsuchiyama" />
     <DisplayName>CopyWithLineNumbers</DisplayName>
-    <Description>Copy With Line Numbers</Description>
+    <Description xml:space="preserve">Add Line number to each line and copy to clipboard.
+This plugin works on Visual Studio 2015 Community and 2017 Community.
+The source code is available at https://github.com/m-tmatma/CopyWithLineNumbers
+    </Description>
+    <License>LICENCE.txt</License>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0,16.0)" />
