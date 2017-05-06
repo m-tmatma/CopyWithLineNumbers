@@ -21,4 +21,6 @@ This is an example text which is sent to clipboard.
 1. Open CopyWithLineNumbers.sln
 2. Compile Solution
 
+## Web Site (In Japanese)
 
+https://m-tmatma.github.io/VC/CopyWithLineNumbers.html
