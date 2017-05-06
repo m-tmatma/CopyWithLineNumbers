@@ -1,6 +1,6 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="VSPackage.cs" company="Company">
-//     Copyright (c) Company.  All rights reserved.
+// <copyright file="VSPackage.cs" company="Masaru Tsuchiyama">
+//     Copyright (c) Masaru Tsuchiyama.  All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
 
