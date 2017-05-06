@@ -35,6 +35,7 @@ namespace CopyWithLineNumbers
     /// To get loaded into VS, the package must be referred by &lt;Asset Type="Microsoft.VisualStudio.VsPackage" ...&gt; in .vsixmanifest file.
     /// </para>
     /// </remarks>
+    [ProvideAutoLoad(Microsoft.VisualStudio.Shell.Interop.UIContextGuids.SolutionExists)]
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [Guid(VSPackage.PackageGuidString)]
@@ -58,7 +59,40 @@ namespace CopyWithLineNumbers
             // initialization is the Initialize method.
         }
 
-        #region Package Members
+
+        /// <summary>
+        /// Get DTE Object
+        /// </summary>
+        public EnvDTE.DTE GetDTE()
+        {
+            return (EnvDTE.DTE)GetService(typeof(SDTE));
+        }
+
+#if DEBUG
+        /// <summary>
+        /// Get OutputWindow
+        /// </summary>
+        public EnvDTE.Window GetOutputWindow(EnvDTE.DTE dte)
+        {
+            return dte.Windows.Item(EnvDTE.Constants.vsWindowKindOutput);
+        }
+
+        /// <summary>
+        /// Add an item to OutputWindow
+        /// </summary>
+        public void AddOutputWindow(string paneName)
+        {
+            var outputWindow = (EnvDTE.OutputWindow)GetOutputWindow(GetDTE()).Object;
+            this.OutputPane = outputWindow.OutputWindowPanes.Add(paneName);
+        }
+#endif
+
+        /// <summary>
+        /// Property For OutputWindow
+        /// </summary>
+        public EnvDTE.OutputWindowPane OutputPane { get; private set; }
+
+#region Package Members
 
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -68,6 +102,10 @@ namespace CopyWithLineNumbers
         {
             base.Initialize();
             CopyWithLineNumbersCommand.Initialize(this);
+
+#if DEBUG
+            AddOutputWindow("Copy With Line Numbers");
+#endif
         }
 
         #endregion
