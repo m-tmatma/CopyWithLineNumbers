@@ -3,7 +3,7 @@
   <Metadata>
     <Identity Id="CopyWithLineNumbers.Masaru Tsuchiyama.b82044d1-5efc-44fc-b75d-5688ceefa5b7" Version="1.0" Language="en-US" Publisher="Masaru Tsuchiyama" />
     <DisplayName>CopyWithLineNumbers</DisplayName>
-    <Description>Empty VSIX Project.</Description>
+    <Description>Copy With Line Numbers</Description>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0,16.0)" />
