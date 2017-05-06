@@ -56,7 +56,7 @@
         <Parent guid="guidVSPackageCmdSet" id="MyMenuGroup" />
         <Icon guid="guidImages" id="bmpPic1" />
         <Strings>
-          <ButtonText>Invoke CopyWithLineNumbersCommand</ButtonText>
+          <ButtonText>Copy With Line Numbers</ButtonText>
         </Strings>
       </Button>
     </Buttons>
