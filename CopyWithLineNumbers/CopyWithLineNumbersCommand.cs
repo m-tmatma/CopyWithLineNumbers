@@ -166,7 +166,7 @@ namespace CopyWithLineNumbers
                 var text = selection.Text;
 
                 var builder = new StringBuilder();
-                var lines = text.Split(new String[] { "\r\n" }, StringSplitOptions.None);
+                var lines = text.Split(new String[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
                 int count = 0;
                 foreach (string line in lines)
                 {
