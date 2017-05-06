@@ -128,6 +128,24 @@ namespace CopyWithLineNumbers
         {
             OutputString(output + Environment.NewLine);
         }
+
+        /// <summary>
+        /// Clear Output Window
+        /// </summary>
+        internal void ClearOutout()
+        {
+            var outPutPane = this.package.OutputPane;
+            outPutPane.Clear();
+        }
+
+        /// <summary>
+        /// Clear Output Window
+        /// </summary>
+        internal void ActivateOutout()
+        {
+            var outPutPane = this.package.OutputPane;
+            outPutPane.Activate();
+        }
 #endif
 
         /// <summary>
@@ -159,7 +177,9 @@ namespace CopyWithLineNumbers
                     count++;
                 }
 #if DEBUG
-                OutputString(builder.ToString());
+                this.ClearOutout();
+                this.ActivateOutout();
+                this.OutputString(builder.ToString());
 #endif
                 Clipboard.SetDataObject(builder.ToString());
             }
