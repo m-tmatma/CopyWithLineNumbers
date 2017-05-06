@@ -34,6 +34,30 @@ namespace CopyWithLineNumbers
         /// </summary>
         private readonly VSPackage package;
 
+
+        /// <summary>
+        /// control whether an menu item is displayed or not.
+        /// </summary>
+        private void BeforeQueryStatus(object sender, EventArgs e)
+        {
+            OleMenuCommand command = sender as OleMenuCommand;
+            if (command != null)
+            {
+                var dte = this.package.GetDTE();
+                var activeDocument = dte.ActiveDocument;
+
+                command.Visible = false;
+                if (activeDocument != null)
+                {
+                    var selection = (EnvDTE.TextSelection)activeDocument.Selection;
+                    if (!selection.IsEmpty)
+                    {
+                        command.Visible = true;
+                    }
+                }
+            }
+        }
+ 
         /// <summary>
         /// Initializes a new instance of the <see cref="CopyWithLineNumbersCommand"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
@@ -52,7 +76,8 @@ namespace CopyWithLineNumbers
             if (commandService != null)
             {
                 var menuCommandID = new CommandID(CommandSet, CommandId);
-                var menuItem = new MenuCommand(this.MenuItemCallback, menuCommandID);
+                var menuItem = new OleMenuCommand(this.MenuItemCallback, menuCommandID);
+                menuItem.BeforeQueryStatus += this.BeforeQueryStatus;
                 commandService.AddCommand(menuItem);
             }
         }
@@ -119,7 +144,7 @@ namespace CopyWithLineNumbers
 
             if (activeDocument != null)
             {
-                var selection = (EnvDTE.TextSelection)dte.ActiveDocument.Selection;
+                var selection = (EnvDTE.TextSelection)activeDocument.Selection;
                 var text = selection.Text;
 
                 var builder = new StringBuilder();

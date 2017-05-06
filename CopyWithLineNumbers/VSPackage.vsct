@@ -60,6 +60,9 @@
       <Button guid="guidVSPackageCmdSet" id="CopyWithLineNumbersCommandId" priority="0x0100" type="Button">
         <Parent guid="guidVSPackageCmdSet" id="MyMenuGroup" />
         <Icon guid="guidImages" id="bmpPic1" />
+        <CommandFlag>IconIsMoniker</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <ButtonText>Copy With Line Numbers</ButtonText>
         </Strings>
