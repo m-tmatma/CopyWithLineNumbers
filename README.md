@@ -16,7 +16,8 @@ This is an example text which is sent to clipboard.
 
 ## Get Binary
 
-download from https://github.com/m-tmatma/CopyWithLineNumbers/releases
+download from https://github.com/m-tmatma/CopyWithLineNumbers/releases or
+https://marketplace.visualstudio.com/items?itemName=tmatma.CopyWithLineNumbers-18783
 
 ## Get Source Code
 
