@@ -49,11 +49,11 @@ namespace CopyWithLineNumbers
                 command.Visible = false;
                 if (activeDocument != null)
                 {
-                    var selection = (EnvDTE.TextSelection)activeDocument.Selection;
-                    if (!selection.IsEmpty)
-                    {
+                    //var selection = (EnvDTE.TextSelection)activeDocument.Selection;
+                    //if (!selection.IsEmpty)
+                    //{
                         command.Visible = true;
-                    }
+                    //}
                 }
             }
         }
@@ -165,17 +165,23 @@ namespace CopyWithLineNumbers
                 var selection = (EnvDTE.TextSelection)activeDocument.Selection;
                 var text = selection.Text;
 
-                var builder = new StringBuilder();
-                var lines = text.Split(new String[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-                int count = 0;
-                foreach (string line in lines)
+                var builder = new StringBuilder(string.Format("//{0}  ({1})", activeDocument.FullName,selection.TopLine));
+
+                if (!string.IsNullOrEmpty(text))
                 {
-                    builder.Append(String.Format("{0, 5}", selection.TopLine + count));
-                    builder.Append(": ");
-                    builder.Append(line);
-                    builder.Append(Environment.NewLine);
-                    count++;
+                    builder.AppendLine();
+                    var lines = text.Split(new String[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+                    int count = 0;
+                    foreach (string line in lines)
+                    {
+                        builder.Append(String.Format("{0, 5}", selection.TopLine + count));
+                        builder.Append(": ");
+                        builder.Append(line);
+                        builder.Append(Environment.NewLine);
+                        count++;
+                    }
                 }
+
 #if DEBUG
                 this.ClearOutout();
                 this.ActivateOutout();
