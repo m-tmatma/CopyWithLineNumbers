@@ -44,5 +44,17 @@ namespace CopyWithLineNumbers
             }
             base.Dispose(disposing);
         }
+
+        /// <summary>
+        /// Handles "apply" messages from the Visual Studio environment.
+        /// </summary>
+        /// <devdoc>
+        /// This method is called when VS wants to save the user's 
+        /// changes (for example, when the user clicks OK in the dialog).
+        /// </devdoc>
+        protected override void OnApply(PageApplyEventArgs e)
+        {
+            this.optionsControl.SaveSetting();
+        }
     }
 }

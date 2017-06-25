@@ -40,6 +40,8 @@ namespace CopyWithLineNumbers
 
             this.comboBoxPathFormatAtFirst.SelectedIndex = 0;
             this.comboBoxFormatOfTheLineNumbers.SelectedIndex = 0;
+
+            this.LoadSetting();
         }
 
         /// <summary>
@@ -71,6 +73,46 @@ namespace CopyWithLineNumbers
                 this.textBoxAddFirst.Enabled = false;
                 this.textBoxAddLast.Enabled = false;
             }
+        }
+
+        public void SaveSetting()
+        {
+            var configuration = new Configuration();
+            configuration.IsAddFileNameAtFirst = this.checkBoxAddFileNameAtFirst.Checked;
+
+            var x = this.comboBoxPathFormatAtFirst.SelectedIndex;
+            if (Enum.IsDefined(typeof(Configuration.FilenameFormatAtFirst), x))
+            {
+                configuration.FormatAtFirst = (Configuration.FilenameFormatAtFirst)x;
+            }
+            else
+            {
+                configuration.FormatAtFirst = Configuration.FilenameFormatAtFirst.FileName;
+            }
+            configuration.AddBeforeFilename = this.textBoxAddFirst.Text;
+            configuration.AddAfterFilename = this.textBoxAddLast.Text;
+
+            var y = this.comboBoxFormatOfTheLineNumbers.SelectedIndex;
+            if (Enum.IsDefined(typeof(Configuration.LineNumberFormat), y))
+            {
+                configuration.Format = (Configuration.LineNumberFormat)y;
+            }
+            else
+            {
+                configuration.Format = Configuration.LineNumberFormat.LineNumber;
+            }
+            configuration.Save();
+        }
+
+        public void LoadSetting()
+        {
+            var configuration = new Configuration();
+            configuration.Load();
+            this.checkBoxAddFileNameAtFirst.Checked = (bool)configuration.IsAddFileNameAtFirst;
+            this.comboBoxPathFormatAtFirst.SelectedIndex = (int)configuration.FormatAtFirst;
+            this.textBoxAddFirst.Text = configuration.AddBeforeFilename;
+            this.textBoxAddLast.Text = configuration.AddAfterFilename;
+            this.comboBoxFormatOfTheLineNumbers.SelectedIndex = (int)configuration.Format;
         }
     }
 }
