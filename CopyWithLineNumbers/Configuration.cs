@@ -9,6 +9,9 @@ namespace CopyWithLineNumbers
 {
     class Configuration
     {
+        private static volatile Configuration instance;
+        private static object syncRoot = new Object();
+
         private const string SubKeyName = @"SOFTWARE\mtmatma\CopyWithLineNumbers";
         private const string ValueNameIsAddFileNameAtFirst = "IsAddFileNameAtFirst";
         private const string ValueNameFilenameFormatAtFirst = "FormatOfFileNameAtFirst";
@@ -44,6 +47,25 @@ namespace CopyWithLineNumbers
 
         public LineNumberFormat Format { get; set; }
 
+        public static Configuration Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    lock (syncRoot)
+                    {
+                        if (instance == null)
+                        {
+                            instance = new Configuration();
+                            instance.Load();
+                        }
+                    }
+                }
+                return instance;
+            }
+        }
+ 
         public void Load()
         {
             try

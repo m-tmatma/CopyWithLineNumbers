@@ -50,8 +50,7 @@ namespace CopyWithLineNumbers
                 command.Visible = false;
                 if (activeDocument != null)
                 {
-                    var configuration = new Configuration();
-                    configuration.Load();
+                    var configuration = Configuration.Instance;
                     if (configuration.IsAddFileNameAtFirst)
                     {
                         command.Visible = true;
@@ -174,8 +173,7 @@ namespace CopyWithLineNumbers
 
                 var builder = new StringBuilder();
 
-                var configuration = new Configuration();
-                configuration.Load();
+                var configuration = Configuration.Instance;
                 if (configuration.IsAddFileNameAtFirst)
                 {
                     builder.Append(configuration.AddBeforeFilename);

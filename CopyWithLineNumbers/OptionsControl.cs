@@ -77,7 +77,7 @@ namespace CopyWithLineNumbers
 
         public void SaveSetting()
         {
-            var configuration = new Configuration();
+            var configuration = Configuration.Instance;
             configuration.IsAddFileNameAtFirst = this.checkBoxAddFileNameAtFirst.Checked;
 
             var x = this.comboBoxPathFormatAtFirst.SelectedIndex;
@@ -106,8 +106,7 @@ namespace CopyWithLineNumbers
 
         public void LoadSetting()
         {
-            var configuration = new Configuration();
-            configuration.Load();
+            var configuration = Configuration.Instance;
             this.checkBoxAddFileNameAtFirst.Checked = (bool)configuration.IsAddFileNameAtFirst;
             this.comboBoxPathFormatAtFirst.SelectedIndex = (int)configuration.FormatAtFirst;
             this.textBoxAddFirst.Text = configuration.AddBeforeFilename;
