@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 namespace CopyWithLineNumbers
 {
@@ -49,6 +50,12 @@ namespace CopyWithLineNumbers
                 command.Visible = false;
                 if (activeDocument != null)
                 {
+                    var configuration = new Configuration();
+                    configuration.Load();
+                    if (configuration.IsAddFileNameAtFirst)
+                    {
+                        command.Visible = true;
+                    }
                     var selection = (EnvDTE.TextSelection)activeDocument.Selection;
                     if (!selection.IsEmpty)
                     {
@@ -166,15 +173,59 @@ namespace CopyWithLineNumbers
                 var text = selection.Text;
 
                 var builder = new StringBuilder();
-                var lines = text.Split(new String[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-                int count = 0;
-                foreach (string line in lines)
+
+                var configuration = new Configuration();
+                configuration.Load();
+                if (configuration.IsAddFileNameAtFirst)
                 {
-                    builder.Append(String.Format("{0, 5}", selection.TopLine + count));
-                    builder.Append(": ");
-                    builder.Append(line);
+                    builder.Append(configuration.AddBeforeFilename);
+                    switch (configuration.FormatAtFirst)
+                    {
+                        case Configuration.FilenameFormatAtFirst.FileName:
+                            builder.Append(Path.GetFileName(activeDocument.FullName));
+                            break;
+                        case Configuration.FilenameFormatAtFirst.FileNameWithLineNumber:
+                            builder.Append(Path.GetFileName(activeDocument.FullName));
+                            builder.Append(string.Format("({0})", selection.TopLine));
+                            break;
+                        case Configuration.FilenameFormatAtFirst.AbsoluteFilePath:
+                            builder.Append(activeDocument.FullName);
+                            break;
+                        case Configuration.FilenameFormatAtFirst.AbsoluteFilepathWithLineNumber:
+                            builder.Append(activeDocument.FullName);
+                            builder.Append(string.Format("({0})", selection.TopLine));
+                            break;
+                    }
+                    builder.Append(configuration.AddAfterFilename);
                     builder.Append(Environment.NewLine);
-                    count++;
+                }
+
+                if (!string.IsNullOrEmpty(text))
+                {
+                    var lines = text.Split(new String[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+                    int count = 0;
+                    foreach (string line in lines)
+                    {
+                        var lineNumber = selection.TopLine + count;
+                        switch (configuration.Format)
+                        {
+                            case Configuration.LineNumberFormat.LineNumber:
+                                builder.Append(String.Format("{0, 5}", lineNumber));
+                                break;
+                            case Configuration.LineNumberFormat.LineNumberWithFileName:
+                                builder.Append(Path.GetFileName(activeDocument.FullName));
+                                builder.Append(String.Format("({0, 5})", lineNumber));
+                                break;
+                            case Configuration.LineNumberFormat.LineNumberWithAbsoluteFilePath:
+                                builder.Append(activeDocument.FullName);
+                                builder.Append(String.Format("({0, 5})", lineNumber));
+                                break;
+                        }
+                        builder.Append(": ");
+                        builder.Append(line);
+                        builder.Append(Environment.NewLine);
+                        count++;
+                    }
                 }
 #if DEBUG
                 this.ClearOutout();
