@@ -87,7 +87,7 @@ namespace CopyWithLineNumbers
             }
             else
             {
-                configuration.FormatAtFirst = Configuration.FilenameFormatAtFirst.FileName;
+                configuration.FormatAtFirst = Configuration.DefaultFilenameFormatAtFirst;
             }
             configuration.AddBeforeFilename = this.textBoxAddFirst.Text;
             configuration.AddAfterFilename = this.textBoxAddLast.Text;
@@ -99,7 +99,7 @@ namespace CopyWithLineNumbers
             }
             else
             {
-                configuration.Format = Configuration.LineNumberFormat.LineNumber;
+                configuration.Format = Configuration.DefaultLineNumberFormat;
             }
             configuration.Save();
         }

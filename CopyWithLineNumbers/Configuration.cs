@@ -31,6 +31,9 @@ namespace CopyWithLineNumbers
             LineNumberWithAbsoluteFilePath,
         }
 
+        public const FilenameFormatAtFirst DefaultFilenameFormatAtFirst = FilenameFormatAtFirst.FileName;
+        public const LineNumberFormat DefaultLineNumberFormat = LineNumberFormat.LineNumber;
+
         public bool IsAddFileNameAtFirst { get; set; }
 
         public FilenameFormatAtFirst FormatAtFirst { get; set; }
@@ -45,11 +48,12 @@ namespace CopyWithLineNumbers
         {
             try
             {
-                RegistryKey rKey = Registry.Users.OpenSubKey(SubKeyName);
+                RegistryKey rKey = Registry.CurrentUser.OpenSubKey(SubKeyName);
 
                 try
                 {
-                    this.IsAddFileNameAtFirst = (bool)rKey.GetValue(ValueNameIsAddFileNameAtFirst);
+                    int value = (int)rKey.GetValue(ValueNameIsAddFileNameAtFirst);
+                    this.IsAddFileNameAtFirst = (value != 0) ? true : false;
                 }
                 catch (NullReferenceException)
                 {
@@ -58,11 +62,19 @@ namespace CopyWithLineNumbers
 
                 try
                 {
-                    this.FormatAtFirst = (FilenameFormatAtFirst)rKey.GetValue(ValueNameFilenameFormatAtFirst);
+                    int value = (int)rKey.GetValue(ValueNameFilenameFormatAtFirst);
+                    if (Enum.IsDefined(typeof(FilenameFormatAtFirst), value))
+                    {
+                        this.FormatAtFirst = (FilenameFormatAtFirst)value;
+                    }
+                    else
+                    {
+                        this.FormatAtFirst = DefaultFilenameFormatAtFirst;
+                    }
                 }
                 catch (NullReferenceException)
                 {
-                    this.FormatAtFirst = FilenameFormatAtFirst.FileName;
+                    this.FormatAtFirst = DefaultFilenameFormatAtFirst;
                 }
 
                 try
@@ -85,11 +97,19 @@ namespace CopyWithLineNumbers
 
                 try
                 {
-                    this.Format = (LineNumberFormat)rKey.GetValue(ValueNameFilenameFormatAtFirst);
+                    int value = (int)rKey.GetValue(ValueNameLineNumberFormat);
+                    if (Enum.IsDefined(typeof(LineNumberFormat), value))
+                    {
+                        this.Format = (LineNumberFormat)value;
+                    }
+                    else
+                    {
+                        this.Format = DefaultLineNumberFormat;
+                    }
                 }
                 catch (NullReferenceException)
                 {
-                    this.Format = LineNumberFormat.LineNumber;
+                    this.Format = DefaultLineNumberFormat;
                 }
 
                 rKey.Close();
@@ -103,11 +123,11 @@ namespace CopyWithLineNumbers
         {
             try
             {
-                RegistryKey rKey = Registry.Users.OpenSubKey(SubKeyName);
+                RegistryKey rKey = Registry.CurrentUser.CreateSubKey(SubKeyName);
 
                 try
                 {
-                    rKey.SetValue(ValueNameIsAddFileNameAtFirst, this.IsAddFileNameAtFirst);
+                    rKey.SetValue(ValueNameIsAddFileNameAtFirst, this.IsAddFileNameAtFirst ? 1 : 0);
                 }
                 catch (NullReferenceException)
                 {
@@ -115,7 +135,7 @@ namespace CopyWithLineNumbers
 
                 try
                 {
-                    rKey.SetValue(ValueNameFilenameFormatAtFirst, this.FormatAtFirst);
+                    rKey.SetValue(ValueNameFilenameFormatAtFirst, (int)this.FormatAtFirst);
                 }
                 catch (NullReferenceException)
                 {
@@ -123,7 +143,7 @@ namespace CopyWithLineNumbers
 
                 try
                 {
-                    rKey.GetValue(ValueNameAddBeforeFilename, this.AddBeforeFilename);
+                    rKey.SetValue(ValueNameAddBeforeFilename, this.AddBeforeFilename);
                 }
                 catch (NullReferenceException)
                 {
@@ -131,7 +151,7 @@ namespace CopyWithLineNumbers
 
                 try
                 {
-                    rKey.GetValue(ValueNameAddAfterFilename, this.AddAfterFilename);
+                    rKey.SetValue(ValueNameAddAfterFilename, this.AddAfterFilename);
                 }
                 catch (NullReferenceException)
                 {
@@ -139,7 +159,7 @@ namespace CopyWithLineNumbers
 
                 try
                 {
-                    rKey.GetValue(ValueNameFilenameFormatAtFirst, this.Format);
+                    rKey.SetValue(ValueNameLineNumberFormat, (int)this.Format);
                 }
                 catch (NullReferenceException)
                 {
