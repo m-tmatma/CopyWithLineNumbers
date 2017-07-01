@@ -210,11 +210,13 @@ namespace CopyWithLineNumbers
                 {
                     var builder = new StringBuilder();
                     var lines = text.Split(new String[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+                    var bottomLine = selection.TopLine + lines.Length;
+                    var width = bottomLine.ToString().Length;
                     int count = 0;
                     foreach (string line in lines)
                     {
                         var lineNumber = selection.TopLine + count;
-                        builder.Append(String.Format("{0, 5}", lineNumber));
+                        builder.Append(lineNumber.ToString().PadLeft(width));
                         builder.Append(": ");
                         builder.Append(line);
                         builder.Append(Environment.NewLine);
