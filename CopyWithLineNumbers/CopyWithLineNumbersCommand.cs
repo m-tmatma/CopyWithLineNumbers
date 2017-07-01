@@ -150,7 +150,30 @@ namespace CopyWithLineNumbers
             outPutPane.Activate();
         }
 #endif
+        /// <summary>
+        /// Create relative Path from the solution file
+        /// </summary>
+        /// <param name="path">file path to be converted</param>
+        /// <returns></returns>
+        private string CreateSolutionRelativePath(string path)
+        {
+            var dte = this.package.GetDTE();
+            if (File.Exists(dte.Solution.FullName))
+            {
+                var solutionDir = Path.GetDirectoryName(dte.Solution.FullName);
 
+                var baseUri = new Uri(solutionDir + "\\");
+                var targetUri = new Uri(path);
+
+                var relativeUri = baseUri.MakeRelativeUri(targetUri);
+                return relativeUri.ToString().Replace("/", "\\");
+            }
+            else
+            {
+                return Path.GetFileName(path);
+            }
+        }
+ 
         /// <summary>
         /// Create a dictionary for the template values
         /// </summary>
@@ -190,6 +213,7 @@ namespace CopyWithLineNumbers
             }
             values[Template.KeyNameForFileName] = Path.GetFileName(activeDocument.FullName);
             values[Template.KeyNameForFullPath] = activeDocument.FullName;
+            values[Template.KeyNameForRelativePath] = CreateSolutionRelativePath(activeDocument.FullName);
             return values;
         }
 

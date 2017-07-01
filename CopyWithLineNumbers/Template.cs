@@ -82,6 +82,11 @@ namespace CopyWithLineNumbers
         static internal string KeyNameForFullPath = "FullPath";
 
         /// <summary>
+        /// Template Name for Relative Path from opened Solution
+        /// </summary>
+        static internal string KeyNameForRelativePath = "RelativePath";
+
+        /// <summary>
         /// Template Name for Line Number
         /// </summary>
         static internal string KeyNameForLineNumber = "LineNumber";
@@ -98,6 +103,7 @@ namespace CopyWithLineNumbers
         {
             new VariableManager(KeyNameForFileName, "File Name"),
             new VariableManager(KeyNameForFullPath, "Absolute File Path"),
+            new VariableManager(KeyNameForRelativePath, "Relative File Path from Solution File"),
             new VariableManager(KeyNameForLineNumber, "File Number"),
             new VariableManager(KeyNameForSelection, "Selection of Active Document"),
         };
