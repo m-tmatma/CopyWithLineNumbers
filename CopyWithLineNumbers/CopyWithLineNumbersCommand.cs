@@ -222,7 +222,7 @@ namespace CopyWithLineNumbers
                     }
                     values[Template.KeyNameForSelection] = builder.ToString();
                 }
-                values[Template.KeyNameForLineNumber] = string.Format("{0}", selection.TopLine);
+                values[Template.KeyNameForTopLineNumber] = string.Format("{0}", selection.TopLine);
             }
             values[Template.KeyNameForFileName] = Path.GetFileName(activeDocument.FullName);
             values[Template.KeyNameForFullPath] = activeDocument.FullName;
