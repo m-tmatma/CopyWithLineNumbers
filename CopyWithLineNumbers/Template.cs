@@ -8,6 +8,59 @@ using System.Threading.Tasks;
 namespace CopyWithLineNumbers
 {
     /// <summary>
+    /// Manager for Variable Name, Description, and Regular Expressioin
+    /// </summary>
+    internal class VariableManager
+    {
+        /// <summary>
+        /// Variable Name
+        /// </summary>
+        internal string Name { get; set; }
+
+        /// <summary>
+        /// Description for Variable
+        /// </summary>
+        internal string Description { get; set; }
+
+        /// <summary>
+        /// Regular Expression for Variable
+        /// </summary>
+        internal Regex Regex { get; set; }
+
+        /// <summary>
+        /// Create a string for a variable
+        /// </summary>
+        /// <param name="variable">variable to be converted</param>
+        /// <returns></returns>
+        internal static string CreateStringForVariable(string variable)
+        {
+            return "{" + variable + "}";
+        }
+
+        /// <summary>
+        /// Create a regular expression for a variable
+        /// </summary>
+        /// <param name="variable">variable to be converted</param>
+        /// <returns></returns>
+        private static string CreateRegExForVariable(string variable)
+        {
+            return "{" + variable + "}";
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="Name">Variable Name</param>
+        /// <param name="Description">Variable Descriotion</param>
+        internal VariableManager(string Name, string Description)
+        {
+            this.Name = Name;
+            this.Description = Description;
+            this.Regex = new Regex(CreateRegExForVariable(Name), RegexOptions.Compiled);
+        }
+    }
+
+    /// <summary>
     /// Template Processing Class
     /// </summary>
     internal class Template
@@ -33,50 +86,20 @@ namespace CopyWithLineNumbers
         static internal string KeyNameForSelection = "Selection";
 
         /// <summary>
-        /// Template Variable Names
+        /// Template Variables
         /// </summary>
-        readonly static string[] TemplateNames = new string[]
+        internal readonly static VariableManager[] Variables = new VariableManager[]
         {
-            KeyNameForFileName,
-            KeyNameForFullPath,
-            KeyNameForLineNumber,
-            KeyNameForSelection,
+            new VariableManager(KeyNameForFileName, "FileName"),
+            new VariableManager(KeyNameForFullPath, "Absolute File Path"),
+            new VariableManager(KeyNameForLineNumber, "File Number"),
+            new VariableManager(KeyNameForSelection, "Selection of Active Document"),
         };
 
         /// <summary>
-        /// Template Variable Name and the regular expression
+        /// Default Template String
         /// </summary>
-        private class RegexAndName
-        {
-            /// <summary>
-            /// Template Variable Name
-            /// </summary>
-            public string Name { get; set; }
-
-            /// <summary>
-            /// Regular Expression
-            /// </summary>
-            public Regex Expression { get; set; }
-        }
-
-        /// <summary>
-        /// Create data for template processing
-        /// </summary>
-        /// <returns></returns>
-        private static List<RegexAndName> CreateTemplateData()
-        {
-            var regexList = new List<RegexAndName>();
-            foreach (string templateName in TemplateNames)
-            {
-                var regexString = "{" + string.Format("{0}", templateName) + "}";
-
-                var regexAndName = new RegexAndName();
-                regexAndName.Name = templateName;
-                regexAndName.Expression = new Regex(regexString, RegexOptions.Compiled);
-                regexList.Add(regexAndName);
-            }
-            return regexList;
-        }
+        internal readonly static string DefaultFormatString = VariableManager.CreateStringForVariable(KeyNameForSelection);
 
         /// <summary>
         /// Replace the template variable to the values defined by dictionary
@@ -86,14 +109,12 @@ namespace CopyWithLineNumbers
         /// <returns></returns>
         internal static string ProcessTemplate(string template, Dictionary<string, string> values)
         {
-            var regexList = CreateTemplateData();
-
-            foreach (RegexAndName regex in regexList)
+            foreach (VariableManager variableManager in Variables)
             {
-                if (values.ContainsKey(regex.Name))
+                if (values.ContainsKey(variableManager.Name))
                 {
-                    var value = values[regex.Name];
-                    template = regex.Expression.Replace(template, value);
+                    var value = values[variableManager.Name];
+                    template = variableManager.Regex.Replace(template, value);
                 }
             }
             return template;

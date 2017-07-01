@@ -28,14 +28,9 @@ namespace CopyWithLineNumbers
         private const string SubKeyName = @"SOFTWARE\mtmatma\CopyWithLineNumbers";
 
         /// <summary>
-        /// Registry Key Name for FormatString setting
+        /// Registry Value Name for FormatString setting
         /// </summary>
         private const string ValueNameFormatString = "FormatString";
-
-        /// <summary>
-        /// Default FormatString
-        /// </summary>
-        private readonly string DefaultFormatString = "{" + Template.KeyNameForSelection + "}";
 
         /// <summary>
         /// Property for Template
@@ -69,6 +64,7 @@ namespace CopyWithLineNumbers
         /// </summary>
         public void Load()
         {
+            var DefaultFormatString = Template.DefaultFormatString;
             this.FormatString = DefaultFormatString;
             try
             {
