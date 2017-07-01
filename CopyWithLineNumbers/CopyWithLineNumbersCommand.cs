@@ -158,10 +158,10 @@ namespace CopyWithLineNumbers
         private Dictionary<string, string> CreateValuesDictionary()
         {
             var values = new Dictionary<string, string>();
-            values[Template.KeyNameForLineNumber] = string.Empty;
-            values[Template.KeyNameForFileName] = string.Empty;
-            values[Template.KeyNameForFullPath] = string.Empty;
-            values[Template.KeyNameForSelection] = string.Empty;
+            foreach (VariableManager variableManager in Template.Variables)
+            {
+                values[variableManager.Name] = string.Empty;
+            }
 
             var dte = this.package.GetDTE();
             var activeDocument = dte.ActiveDocument;
