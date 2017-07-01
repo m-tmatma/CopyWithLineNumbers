@@ -7,46 +7,44 @@ using Microsoft.Win32;
 
 namespace CopyWithLineNumbers
 {
+    /// <summary>
+    /// Configuration and setting manager
+    /// </summary>
     class Configuration
     {
+        /// <summary>
+        /// Singleton for this class
+        /// </summary>
         private static volatile Configuration instance;
+
+        /// <summary>
+        /// Lock Object
+        /// </summary>
         private static object syncRoot = new Object();
 
+        /// <summary>
+        /// Registry SubKey for the setting
+        /// </summary>
         private const string SubKeyName = @"SOFTWARE\mtmatma\CopyWithLineNumbers";
-        private const string ValueNameIsAddFileNameAtFirst = "IsAddFileNameAtFirst";
-        private const string ValueNameFilenameFormatAtFirst = "FormatOfFileNameAtFirst";
-        private const string ValueNameAddBeforeFilename = "AddBeforeFilename";
-        private const string ValueNameAddAfterFilename = "AddAfterFilename";
-        private const string ValueNameLineNumberFormat = "LineNumberFormat";
 
-        public enum FilenameFormatAtFirst
-        {
-            FileName,
-            FileNameWithLineNumber,
-            AbsoluteFilePath,
-            AbsoluteFilepathWithLineNumber,
-        }
+        /// <summary>
+        /// Registry Key Name for FormatString setting
+        /// </summary>
+        private const string ValueNameFormatString = "FormatString";
 
-        public enum LineNumberFormat
-        {
-            LineNumber,
-            LineNumberWithFileName,
-            LineNumberWithAbsoluteFilePath,
-        }
+        /// <summary>
+        /// Default FormatString
+        /// </summary>
+        private readonly string DefaultFormatString = "{" + Template.KeyNameForSelection + "}";
 
-        public const FilenameFormatAtFirst DefaultFilenameFormatAtFirst = FilenameFormatAtFirst.FileName;
-        public const LineNumberFormat DefaultLineNumberFormat = LineNumberFormat.LineNumber;
+        /// <summary>
+        /// Property for Template
+        /// </summary>
+        public string FormatString { get; set; }
 
-        public bool IsAddFileNameAtFirst { get; set; }
-
-        public FilenameFormatAtFirst FormatAtFirst { get; set; }
-
-        public string AddBeforeFilename { get; set; }
-
-        public string AddAfterFilename { get; set; }
-
-        public LineNumberFormat Format { get; set; }
-
+        /// <summary>
+        /// Property for getting singleton instance
+        /// </summary>
         public static Configuration Instance
         {
             get
@@ -66,74 +64,24 @@ namespace CopyWithLineNumbers
             }
         }
  
+        /// <summary>
+        /// Load setting from registry
+        /// </summary>
         public void Load()
         {
+            this.FormatString = DefaultFormatString;
             try
             {
                 RegistryKey rKey = Registry.CurrentUser.OpenSubKey(SubKeyName);
 
                 try
                 {
-                    int value = (int)rKey.GetValue(ValueNameIsAddFileNameAtFirst);
-                    this.IsAddFileNameAtFirst = (value != 0) ? true : false;
+                    var value = (string)rKey.GetValue(ValueNameFormatString, DefaultFormatString);
+                    this.FormatString = value;
                 }
                 catch (NullReferenceException)
                 {
-                    this.IsAddFileNameAtFirst = false;
                 }
-
-                try
-                {
-                    int value = (int)rKey.GetValue(ValueNameFilenameFormatAtFirst);
-                    if (Enum.IsDefined(typeof(FilenameFormatAtFirst), value))
-                    {
-                        this.FormatAtFirst = (FilenameFormatAtFirst)value;
-                    }
-                    else
-                    {
-                        this.FormatAtFirst = DefaultFilenameFormatAtFirst;
-                    }
-                }
-                catch (NullReferenceException)
-                {
-                    this.FormatAtFirst = DefaultFilenameFormatAtFirst;
-                }
-
-                try
-                {
-                    this.AddBeforeFilename = (string)rKey.GetValue(ValueNameAddBeforeFilename);
-                }
-                catch (NullReferenceException)
-                {
-                    this.AddBeforeFilename = string.Empty;
-                }
-
-                try
-                {
-                    this.AddAfterFilename = (string)rKey.GetValue(ValueNameAddAfterFilename);
-                }
-                catch (NullReferenceException)
-                {
-                    this.AddAfterFilename = string.Empty;
-                }
-
-                try
-                {
-                    int value = (int)rKey.GetValue(ValueNameLineNumberFormat);
-                    if (Enum.IsDefined(typeof(LineNumberFormat), value))
-                    {
-                        this.Format = (LineNumberFormat)value;
-                    }
-                    else
-                    {
-                        this.Format = DefaultLineNumberFormat;
-                    }
-                }
-                catch (NullReferenceException)
-                {
-                    this.Format = DefaultLineNumberFormat;
-                }
-
                 rKey.Close();
             }
             catch (NullReferenceException)
@@ -141,6 +89,9 @@ namespace CopyWithLineNumbers
             }
         }
 
+        /// <summary>
+        /// Store setting to registry
+        /// </summary>
         public void Save()
         {
             try
@@ -149,44 +100,11 @@ namespace CopyWithLineNumbers
 
                 try
                 {
-                    rKey.SetValue(ValueNameIsAddFileNameAtFirst, this.IsAddFileNameAtFirst ? 1 : 0);
+                    rKey.SetValue(ValueNameFormatString, this.FormatString);
                 }
                 catch (NullReferenceException)
                 {
                 }
-
-                try
-                {
-                    rKey.SetValue(ValueNameFilenameFormatAtFirst, (int)this.FormatAtFirst);
-                }
-                catch (NullReferenceException)
-                {
-                }
-
-                try
-                {
-                    rKey.SetValue(ValueNameAddBeforeFilename, this.AddBeforeFilename);
-                }
-                catch (NullReferenceException)
-                {
-                }
-
-                try
-                {
-                    rKey.SetValue(ValueNameAddAfterFilename, this.AddAfterFilename);
-                }
-                catch (NullReferenceException)
-                {
-                }
-
-                try
-                {
-                    rKey.SetValue(ValueNameLineNumberFormat, (int)this.Format);
-                }
-                catch (NullReferenceException)
-                {
-                }
-
                 rKey.Close();
             }
             catch (NullReferenceException)

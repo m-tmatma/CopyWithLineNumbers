@@ -12,6 +12,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Collections.Generic;
 
 namespace CopyWithLineNumbers
 {
@@ -51,10 +52,6 @@ namespace CopyWithLineNumbers
                 if (activeDocument != null)
                 {
                     var configuration = Configuration.Instance;
-                    if (configuration.IsAddFileNameAtFirst)
-                    {
-                        command.Visible = true;
-                    }
                     var selection = (EnvDTE.TextSelection)activeDocument.Selection;
                     if (!selection.IsEmpty)
                     {
@@ -155,6 +152,48 @@ namespace CopyWithLineNumbers
 #endif
 
         /// <summary>
+        /// Create a dictionary for the template values
+        /// </summary>
+        /// <returns></returns>
+        private Dictionary<string, string> CreateValuesDictionary()
+        {
+            var values = new Dictionary<string, string>();
+            values[Template.KeyNameForLineNumber] = string.Empty;
+            values[Template.KeyNameForFileName] = string.Empty;
+            values[Template.KeyNameForFullPath] = string.Empty;
+            values[Template.KeyNameForSelection] = string.Empty;
+
+            var dte = this.package.GetDTE();
+            var activeDocument = dte.ActiveDocument;
+            if (activeDocument != null)
+            {
+                var selection = (EnvDTE.TextSelection)activeDocument.Selection;
+                var text = selection.Text;
+
+                if (!string.IsNullOrEmpty(text))
+                {
+                    var builder = new StringBuilder();
+                    var lines = text.Split(new String[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+                    int count = 0;
+                    foreach (string line in lines)
+                    {
+                        var lineNumber = selection.TopLine + count;
+                        builder.Append(String.Format("{0, 5}", lineNumber));
+                        builder.Append(": ");
+                        builder.Append(line);
+                        builder.Append(Environment.NewLine);
+                        count++;
+                    }
+                    values[Template.KeyNameForSelection] = builder.ToString();
+                }
+                values[Template.KeyNameForLineNumber] = string.Format("({0})", selection.TopLine);
+            }
+            values[Template.KeyNameForFileName] = Path.GetFileName(activeDocument.FullName);
+            values[Template.KeyNameForFullPath] = activeDocument.FullName;
+            return values;
+        }
+
+        /// <summary>
         /// This function is the callback used to execute the command when the menu item is clicked.
         /// See the constructor to see how the menu item is associated with this function using
         /// OleMenuCommandService service and MenuCommand class.
@@ -168,69 +207,17 @@ namespace CopyWithLineNumbers
 
             if (activeDocument != null)
             {
-                var selection = (EnvDTE.TextSelection)activeDocument.Selection;
-                var text = selection.Text;
-
-                var builder = new StringBuilder();
-
+                var values = CreateValuesDictionary();
                 var configuration = Configuration.Instance;
-                if (configuration.IsAddFileNameAtFirst)
-                {
-                    builder.Append(configuration.AddBeforeFilename);
-                    switch (configuration.FormatAtFirst)
-                    {
-                        case Configuration.FilenameFormatAtFirst.FileName:
-                            builder.Append(Path.GetFileName(activeDocument.FullName));
-                            break;
-                        case Configuration.FilenameFormatAtFirst.FileNameWithLineNumber:
-                            builder.Append(Path.GetFileName(activeDocument.FullName));
-                            builder.Append(string.Format("({0})", selection.TopLine));
-                            break;
-                        case Configuration.FilenameFormatAtFirst.AbsoluteFilePath:
-                            builder.Append(activeDocument.FullName);
-                            break;
-                        case Configuration.FilenameFormatAtFirst.AbsoluteFilepathWithLineNumber:
-                            builder.Append(activeDocument.FullName);
-                            builder.Append(string.Format("({0})", selection.TopLine));
-                            break;
-                    }
-                    builder.Append(configuration.AddAfterFilename);
-                    builder.Append(Environment.NewLine);
-                }
+                var formatString = configuration.FormatString;
 
-                if (!string.IsNullOrEmpty(text))
-                {
-                    var lines = text.Split(new String[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-                    int count = 0;
-                    foreach (string line in lines)
-                    {
-                        var lineNumber = selection.TopLine + count;
-                        switch (configuration.Format)
-                        {
-                            case Configuration.LineNumberFormat.LineNumber:
-                                builder.Append(String.Format("{0, 5}", lineNumber));
-                                break;
-                            case Configuration.LineNumberFormat.LineNumberWithFileName:
-                                builder.Append(Path.GetFileName(activeDocument.FullName));
-                                builder.Append(String.Format("({0, 5})", lineNumber));
-                                break;
-                            case Configuration.LineNumberFormat.LineNumberWithAbsoluteFilePath:
-                                builder.Append(activeDocument.FullName);
-                                builder.Append(String.Format("({0, 5})", lineNumber));
-                                break;
-                        }
-                        builder.Append(": ");
-                        builder.Append(line);
-                        builder.Append(Environment.NewLine);
-                        count++;
-                    }
-                }
+                string copyString = Template.ProcessTemplate(formatString, values);
 #if DEBUG
                 this.ClearOutout();
                 this.ActivateOutout();
-                this.OutputString(builder.ToString());
+                this.OutputString(copyString);
 #endif
-                Clipboard.SetDataObject(builder.ToString());
+                Clipboard.SetDataObject(copyString);
             }
         }
     }
