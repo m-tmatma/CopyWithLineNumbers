@@ -23,6 +23,11 @@ namespace CopyWithLineNumbers
         internal string Description { get; set; }
 
         /// <summary>
+        /// Variable
+        /// </summary>
+        internal string Variable { get; set; }
+
+        /// <summary>
         /// Regular Expression for Variable
         /// </summary>
         internal Regex Regex { get; set; }
@@ -32,7 +37,7 @@ namespace CopyWithLineNumbers
         /// </summary>
         /// <param name="variable">variable to be converted</param>
         /// <returns></returns>
-        internal static string CreateStringForVariable(string variable)
+        internal static string CreateVariable(string variable)
         {
             return "{" + variable + "}";
         }
@@ -42,7 +47,7 @@ namespace CopyWithLineNumbers
         /// </summary>
         /// <param name="variable">variable to be converted</param>
         /// <returns></returns>
-        private static string CreateRegExForVariable(string variable)
+        private static string CreateRegularExpression(string variable)
         {
             return "{" + variable + "}";
         }
@@ -55,8 +60,9 @@ namespace CopyWithLineNumbers
         internal VariableManager(string Name, string Description)
         {
             this.Name = Name;
-            this.Description = Description;
-            this.Regex = new Regex(CreateRegExForVariable(Name), RegexOptions.Compiled);
+            this.Variable = CreateVariable(Name);
+            this.Description = this.Variable + " : " + Description;
+            this.Regex = new Regex(CreateRegularExpression(Name), RegexOptions.Compiled);
         }
     }
 
@@ -90,7 +96,7 @@ namespace CopyWithLineNumbers
         /// </summary>
         internal readonly static VariableManager[] Variables = new VariableManager[]
         {
-            new VariableManager(KeyNameForFileName, "FileName"),
+            new VariableManager(KeyNameForFileName, "File Name"),
             new VariableManager(KeyNameForFullPath, "Absolute File Path"),
             new VariableManager(KeyNameForLineNumber, "File Number"),
             new VariableManager(KeyNameForSelection, "Selection of Active Document"),
@@ -99,7 +105,7 @@ namespace CopyWithLineNumbers
         /// <summary>
         /// Default Template String
         /// </summary>
-        internal readonly static string DefaultFormatString = VariableManager.CreateStringForVariable(KeyNameForSelection);
+        internal readonly static string DefaultFormatString = VariableManager.CreateVariable(KeyNameForSelection);
 
         /// <summary>
         /// Replace the template variable to the values defined by dictionary
@@ -111,7 +117,7 @@ namespace CopyWithLineNumbers
         {
             foreach (VariableManager variableManager in Variables)
             {
-                if (values.ContainsKey(variableManager.Name))
+                if (!string.IsNullOrEmpty(variableManager.Name) && values.ContainsKey(variableManager.Name))
                 {
                     var value = values[variableManager.Name];
                     template = variableManager.Regex.Replace(template, value);

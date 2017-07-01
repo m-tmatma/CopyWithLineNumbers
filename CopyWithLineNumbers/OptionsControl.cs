@@ -18,6 +18,12 @@ namespace CopyWithLineNumbers
         {
             InitializeComponent();
             this.LoadSetting();
+
+            foreach(VariableManager variableName in Template.Variables)
+            {
+                this.comboBoxVariable.Items.Add(variableName.Description);
+            }
+            this.comboBoxVariable.SelectedIndex = 0;
         }
 
         /// <summary>
@@ -46,6 +52,25 @@ namespace CopyWithLineNumbers
         {
             var configuration = Configuration.Instance;
             this.textBoxTemplate.Text = configuration.FormatString;
+        }
+
+        private void buttonInsert_Click(object sender, EventArgs e)
+        {
+            var variable = Template.Variables[this.comboBoxVariable.SelectedIndex].Variable;
+            var textBox = this.textBoxTemplate;
+            textBox.Text = textBox.Text.Insert(textBox.SelectionStart, variable);
+        }
+
+        private void buttonInsertLineEnding_Click(object sender, EventArgs e)
+        {
+            var textBox = this.textBoxTemplate;
+            textBox.Text = textBox.Text.Insert(textBox.SelectionStart, Environment.NewLine);
+        }
+
+        private void buttonSetDefault_Click(object sender, EventArgs e)
+        {
+            var textBox = this.textBoxTemplate;
+            textBox.Text = Template.DefaultFormatString;
         }
     }
 }
