@@ -57,6 +57,19 @@ namespace CopyWithLineNumbers
                     {
                         command.Visible = true;
                     }
+                    else
+                    {
+                        var values = CreateValuesDictionary();
+                        values[Template.KeyNameForSelection] = string.Empty;
+                        var formatString = configuration.FormatString;
+
+                        var copyString = Template.ProcessTemplate(formatString, values);
+                        var clippedString = copyString.Replace("\n", "");
+                        if (!string.IsNullOrWhiteSpace(clippedString))
+                        {
+                            command.Visible = true;
+                        }
+                    }
                 }
             }
         }
@@ -235,7 +248,7 @@ namespace CopyWithLineNumbers
                 var configuration = Configuration.Instance;
                 var formatString = configuration.FormatString;
 
-                string copyString = Template.ProcessTemplate(formatString, values);
+                var copyString = Template.ProcessTemplate(formatString, values);
 #if DEBUG
                 this.ClearOutout();
                 this.ActivateOutout();
