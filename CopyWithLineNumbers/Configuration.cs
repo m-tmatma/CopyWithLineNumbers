@@ -10,22 +10,17 @@ namespace CopyWithLineNumbers
     /// <summary>
     /// Configuration and setting manager
     /// </summary>
-    class Configuration
+    public class Configuration
     {
         /// <summary>
-        /// Singleton for this class
+        /// root registry key for user setting
         /// </summary>
-        private static volatile Configuration instance;
-
-        /// <summary>
-        /// Lock Object
-        /// </summary>
-        private static object syncRoot = new Object();
+        private RegistryKey UserRegistryRoot;
 
         /// <summary>
         /// Registry SubKey for the setting
         /// </summary>
-        private const string SubKeyName = @"SOFTWARE\mtmatma\CopyWithLineNumbers";
+        private const string SubKeyName = @"CopyWithLineNumbers";
 
         /// <summary>
         /// Registry Value Name for FormatString setting
@@ -40,23 +35,10 @@ namespace CopyWithLineNumbers
         /// <summary>
         /// Property for getting singleton instance
         /// </summary>
-        public static Configuration Instance
+        /// <param name="userRegistryRoot">root Registry for User setting</param>
+        public Configuration(RegistryKey userRegistryRoot)
         {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
-                        if (instance == null)
-                        {
-                            instance = new Configuration();
-                            instance.Load();
-                        }
-                    }
-                }
-                return instance;
-            }
+            this.UserRegistryRoot = userRegistryRoot;
         }
  
         /// <summary>
@@ -68,20 +50,15 @@ namespace CopyWithLineNumbers
             this.FormatString = DefaultFormatString;
             try
             {
-                RegistryKey rKey = Registry.CurrentUser.OpenSubKey(SubKeyName);
-
-                try
+                using (RegistryKey subKey = this.UserRegistryRoot.OpenSubKey(SubKeyName))
                 {
-                    var value = (string)rKey.GetValue(ValueNameFormatString, DefaultFormatString);
+                    var value = (string)subKey.GetValue(ValueNameFormatString, DefaultFormatString);
                     this.FormatString = value;
                 }
-                catch (NullReferenceException)
-                {
-                }
-                rKey.Close();
             }
             catch (NullReferenceException)
             {
+                ;
             }
         }
 
@@ -92,19 +69,14 @@ namespace CopyWithLineNumbers
         {
             try
             {
-                RegistryKey rKey = Registry.CurrentUser.CreateSubKey(SubKeyName);
-
-                try
+                using (RegistryKey subKey = this.UserRegistryRoot.CreateSubKey(SubKeyName))
                 {
-                    rKey.SetValue(ValueNameFormatString, this.FormatString);
+                    subKey.SetValue(ValueNameFormatString, this.FormatString);
                 }
-                catch (NullReferenceException)
-                {
-                }
-                rKey.Close();
             }
             catch (NullReferenceException)
             {
+                ;
             }
         }
     }

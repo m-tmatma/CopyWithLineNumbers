@@ -51,7 +51,7 @@ namespace CopyWithLineNumbers
                 command.Visible = false;
                 if (activeDocument != null)
                 {
-                    var configuration = Configuration.Instance;
+                    var configuration = this.package.GetConfiguration();
                     var selection = (EnvDTE.TextSelection)activeDocument.Selection;
                     if (!selection.IsEmpty)
                     {
@@ -252,7 +252,7 @@ namespace CopyWithLineNumbers
             if (activeDocument != null)
             {
                 var values = CreateValuesDictionary();
-                var configuration = Configuration.Instance;
+                var configuration = this.package.GetConfiguration();
                 var formatString = configuration.FormatString;
 
                 var copyString = Template.ProcessTemplate(formatString, values);

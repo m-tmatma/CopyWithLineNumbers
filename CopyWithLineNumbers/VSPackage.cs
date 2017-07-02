@@ -89,6 +89,17 @@ namespace CopyWithLineNumbers
 #endif
 
         /// <summary>
+        /// Get Instance of Configuration
+        /// </summary>
+        /// <returns></returns>
+        public Configuration GetConfiguration()
+        {
+            var configuration = new Configuration(this.UserRegistryRoot);
+            configuration.Load();
+            return configuration;
+        }
+
+        /// <summary>
         /// Property For OutputWindow
         /// </summary>
         public EnvDTE.OutputWindowPane OutputPane { get; private set; }
