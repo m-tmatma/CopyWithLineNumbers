@@ -11,6 +11,8 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
+using System.Collections.Generic;
 
 namespace CopyWithLineNumbers
 {
@@ -49,10 +51,24 @@ namespace CopyWithLineNumbers
                 command.Visible = false;
                 if (activeDocument != null)
                 {
+                    var configuration = Configuration.Instance;
                     var selection = (EnvDTE.TextSelection)activeDocument.Selection;
                     if (!selection.IsEmpty)
                     {
                         command.Visible = true;
+                    }
+                    else
+                    {
+                        var values = CreateValuesDictionary();
+                        values[Template.KeyNameForSelection] = string.Empty;
+                        var formatString = configuration.FormatString;
+
+                        var copyString = Template.ProcessTemplate(formatString, values);
+                        var clippedString = copyString.Replace("\n", "");
+                        if (!string.IsNullOrWhiteSpace(clippedString))
+                        {
+                            command.Visible = true;
+                        }
                     }
                 }
             }
@@ -147,6 +163,79 @@ namespace CopyWithLineNumbers
             outPutPane.Activate();
         }
 #endif
+        /// <summary>
+        /// Create relative Path from the solution file
+        /// </summary>
+        /// <param name="path">file path to be converted</param>
+        /// <returns></returns>
+        private string CreateSolutionRelativePath(string path)
+        {
+            var dte = this.package.GetDTE();
+            if (File.Exists(dte.Solution.FullName))
+            {
+                var solutionDir = Path.GetDirectoryName(dte.Solution.FullName);
+
+                var baseUri = new Uri(solutionDir + "\\");
+                var targetUri = new Uri(path);
+
+                var relativeUri = baseUri.MakeRelativeUri(targetUri);
+                return relativeUri.ToString().Replace("/", "\\");
+            }
+            else
+            {
+                return Path.GetFileName(path);
+            }
+        }
+ 
+        /// <summary>
+        /// Create a dictionary for the template values
+        /// </summary>
+        /// <returns></returns>
+        private Dictionary<string, string> CreateValuesDictionary()
+        {
+            var values = new Dictionary<string, string>();
+            foreach (VariableManager variableManager in Template.Variables)
+            {
+                values[variableManager.Name] = string.Empty;
+            }
+
+            var dte = this.package.GetDTE();
+            var activeDocument = dte.ActiveDocument;
+            if (activeDocument != null)
+            {
+                var selection = (EnvDTE.TextSelection)activeDocument.Selection;
+                var text = selection.Text;
+                var bottomLine = selection.TopLine;
+
+                if (!string.IsNullOrEmpty(text))
+                {
+                    var builder = new StringBuilder();
+                    var lines = text.Split(new String[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+                    if (lines.Length > 0)
+                    {
+                        bottomLine = selection.TopLine + lines.Length - 1;
+                    }
+                    var width = bottomLine.ToString().Length;
+                    int count = 0;
+                    foreach (string line in lines)
+                    {
+                        var lineNumber = selection.TopLine + count;
+                        builder.Append(lineNumber.ToString().PadLeft(width));
+                        builder.Append(": ");
+                        builder.Append(line);
+                        builder.Append(Environment.NewLine);
+                        count++;
+                    }
+                    values[Template.KeyNameForSelection] = builder.ToString();
+                }
+                values[Template.KeyNameForTopLineNumber] = string.Format("{0}", selection.TopLine);
+                values[Template.KeyNameForBottomLineNumber] = string.Format("{0}", bottomLine);
+            }
+            values[Template.KeyNameForFileName] = Path.GetFileName(activeDocument.FullName);
+            values[Template.KeyNameForFullPath] = activeDocument.FullName;
+            values[Template.KeyNameForRelativePath] = CreateSolutionRelativePath(activeDocument.FullName);
+            return values;
+        }
 
         /// <summary>
         /// This function is the callback used to execute the command when the menu item is clicked.
@@ -162,26 +251,17 @@ namespace CopyWithLineNumbers
 
             if (activeDocument != null)
             {
-                var selection = (EnvDTE.TextSelection)activeDocument.Selection;
-                var text = selection.Text;
+                var values = CreateValuesDictionary();
+                var configuration = Configuration.Instance;
+                var formatString = configuration.FormatString;
 
-                var builder = new StringBuilder();
-                var lines = text.Split(new String[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-                int count = 0;
-                foreach (string line in lines)
-                {
-                    builder.Append(String.Format("{0, 5}", selection.TopLine + count));
-                    builder.Append(": ");
-                    builder.Append(line);
-                    builder.Append(Environment.NewLine);
-                    count++;
-                }
+                var copyString = Template.ProcessTemplate(formatString, values);
 #if DEBUG
                 this.ClearOutout();
                 this.ActivateOutout();
-                this.OutputString(builder.ToString());
+                this.OutputString(copyString);
 #endif
-                Clipboard.SetDataObject(builder.ToString());
+                Clipboard.SetDataObject(copyString);
             }
         }
     }
