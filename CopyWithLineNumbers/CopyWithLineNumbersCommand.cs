@@ -205,12 +205,16 @@ namespace CopyWithLineNumbers
             {
                 var selection = (EnvDTE.TextSelection)activeDocument.Selection;
                 var text = selection.Text;
+                var bottomLine = selection.TopLine;
 
                 if (!string.IsNullOrEmpty(text))
                 {
                     var builder = new StringBuilder();
                     var lines = text.Split(new String[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-                    var bottomLine = selection.TopLine + lines.Length;
+                    if (lines.Length > 0)
+                    {
+                        bottomLine = selection.TopLine + lines.Length - 1;
+                    }
                     var width = bottomLine.ToString().Length;
                     int count = 0;
                     foreach (string line in lines)
@@ -225,6 +229,7 @@ namespace CopyWithLineNumbers
                     values[Template.KeyNameForSelection] = builder.ToString();
                 }
                 values[Template.KeyNameForTopLineNumber] = string.Format("{0}", selection.TopLine);
+                values[Template.KeyNameForBottomLineNumber] = string.Format("{0}", bottomLine);
             }
             values[Template.KeyNameForFileName] = Path.GetFileName(activeDocument.FullName);
             values[Template.KeyNameForFullPath] = activeDocument.FullName;

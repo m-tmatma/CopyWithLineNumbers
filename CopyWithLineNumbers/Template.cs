@@ -92,6 +92,11 @@ namespace CopyWithLineNumbers
         static internal string KeyNameForTopLineNumber = "TopLineNumber";
 
         /// <summary>
+        /// Template Name for Bottom Line Number
+        /// </summary>
+        static internal string KeyNameForBottomLineNumber = "BottomLineNumber";
+
+        /// <summary>
         /// Template Name for Selection
         /// </summary>
         static internal string KeyNameForSelection = "Selection";
@@ -105,6 +110,7 @@ namespace CopyWithLineNumbers
             new VariableManager(KeyNameForFullPath, "Absolute File Path"),
             new VariableManager(KeyNameForRelativePath, "Relative File Path from Solution File"),
             new VariableManager(KeyNameForTopLineNumber, "The Top Line Number"),
+            new VariableManager(KeyNameForBottomLineNumber, "The Bottom Line Number"),
             new VariableManager(KeyNameForSelection, "Selection of Active Document"),
         };
 
