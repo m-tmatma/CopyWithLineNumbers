@@ -45,6 +45,11 @@ namespace CopyWithLineNumbers
     public sealed class VSPackage : Package
     {
         /// <summary>
+        /// configuration class
+        /// </summary>
+        private Configuration configuration;
+
+        /// <summary>
         /// VSPackage GUID string.
         /// </summary>
         public const string PackageGuidString = "c43ac2b7-f6f8-4fb9-a537-eeb29a7a03eb";
@@ -94,8 +99,6 @@ namespace CopyWithLineNumbers
         /// <returns></returns>
         public Configuration GetConfiguration()
         {
-            var configuration = new Configuration(this.UserRegistryRoot);
-            configuration.Load();
             return configuration;
         }
 
@@ -118,6 +121,9 @@ namespace CopyWithLineNumbers
 #if DEBUG
             AddOutputWindow("Copy With Line Numbers");
 #endif
+
+            this.configuration = new Configuration(this.UserRegistryRoot);
+            this.configuration.Load();
         }
 
         #endregion
