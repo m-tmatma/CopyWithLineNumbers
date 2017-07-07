@@ -15,7 +15,7 @@ This is an example text which is sent to clipboard.
 
 	   11:         public static void Main(string[] args)
 	   12:         {
-	   23:         }
+	   13:         }
 
 ### Example2
 
