@@ -1,18 +1,43 @@
 # CopyWithLineNumbers
 Copy With Line Numbers Visual Studio Plugin
 
-* This is a plugin for Visaul Studio which copies with line numbers to the clipboard.
-* The solution and project file are for Visual Studio 2017 Community.
+* This is a plugin for Visual Studio which copies with line numbers to the clipboard.
+* The solution and project file are for Visual Studio 2017.
 * It works on Visual Studio 2015 and 2017.
-* I tested only community edition, so if it doen't work on Professinal and Enterprise, let me know or send a pull request.
+* I tested only community edition, so if it doesn't work on Professinal and Enterprise, let me know or send a pull request.
+* The copying text can be customizable by template. See the manual page for detail.
 
 ## Example
 
 This is an example text which is sent to clipboard.
 
-	   18:         public static void Main(string[] args)
-	   19:         {
-	   20:         }
+### Example1
+
+	   11:         public static void Main(string[] args)
+	   12:         {
+	   23:         }
+
+### Example2
+
+	   c:\Test\ConsoleApp\ConsoleApp\Program.cs(11) - (13):
+	   11:         static void Main(string[] args)
+	   12:         {
+	   13:         }
+
+### Example3
+
+	   ConsoleApp\Program.cs:
+	   11:         static void Main(string[] args)
+	   12:         {
+	   13:         }
+
+### Example4
+
+	   Program.cs(11):
+	   11:         static void Main(string[] args)
+	   12:         {
+	   13:         }
+
 
 ## Get Binary
 
@@ -25,8 +50,12 @@ https://marketplace.visualstudio.com/items?itemName=tmatma.CopyWithLineNumbers-1
 
 ## Compile
 
-1. Open CopyWithLineNumbers.sln
+1. Open CopyWithLineNumbers.sln with Visaul Studio 2017
 2. Compile Solution
+
+## Manual
+
+https://m-tmatma.github.io/VC/CopyWithLineNumbersManualEN.html
 
 ## Web Site (In Japanese)
 
