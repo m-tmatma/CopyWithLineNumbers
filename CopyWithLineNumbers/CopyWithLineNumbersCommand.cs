@@ -214,11 +214,22 @@ namespace CopyWithLineNumbers
                     if (lines.Length > 0)
                     {
                         bottomLine = selection.TopLine + lines.Length - 1;
+                        if (string.IsNullOrEmpty(lines[lines.Length - 1]))
+                        {
+                            bottomLine--;
+                        }
                     }
                     var width = bottomLine.ToString().Length;
                     int count = 0;
                     foreach (string line in lines)
                     {
+                        if (count == lines.Length - 1)
+                        {
+                            if (string.IsNullOrEmpty(line))
+                            {
+                                break;
+                            }
+                        }
                         var lineNumber = selection.TopLine + count;
                         builder.Append(lineNumber.ToString().PadLeft(width));
                         builder.Append(": ");
