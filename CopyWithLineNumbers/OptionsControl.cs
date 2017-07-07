@@ -17,7 +17,6 @@ namespace CopyWithLineNumbers
         public OptionsControl()
         {
             InitializeComponent();
-            this.LoadSetting();
 
             foreach(VariableManager variableName in Template.Variables)
             {
@@ -41,16 +40,22 @@ namespace CopyWithLineNumbers
             }
         }
 
-        public void SaveSetting()
+        /// <summary>
+        /// Save the setting to the registry
+        /// </summary>
+        /// <param name="configuration"></param>
+        public void SaveSetting(Configuration configuration)
         {
-            var configuration = Configuration.Instance;
             configuration.FormatString = this.textBoxTemplate.Text;
             configuration.Save();
         }
 
-        public void LoadSetting()
+        /// <summary>
+        /// Load the setting from the registry
+        /// </summary>
+        /// <param name="configuration"></param>
+        public void LoadSetting(Configuration configuration)
         {
-            var configuration = Configuration.Instance;
             this.textBoxTemplate.Text = configuration.FormatString;
         }
 

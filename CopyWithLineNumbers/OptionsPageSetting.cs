@@ -26,6 +26,10 @@ namespace CopyWithLineNumbers
                     optionsControl = new OptionsControl();
                     optionsControl.Location = new Point(0, 0);
                     optionsControl.OptionsPage = this;
+
+                    VSPackage package = GetService(typeof(VSPackage)) as VSPackage;
+                    var configuration = package.GetConfiguration();
+                    optionsControl.LoadSetting(configuration);
                 }
                 return optionsControl;
             }
@@ -54,7 +58,10 @@ namespace CopyWithLineNumbers
         /// </devdoc>
         protected override void OnApply(PageApplyEventArgs e)
         {
-            this.optionsControl.SaveSetting();
+            VSPackage package = GetService(typeof(VSPackage)) as VSPackage;
+            var configuration = package.GetConfiguration();
+
+            this.optionsControl.SaveSetting(configuration);
         }
     }
 }
