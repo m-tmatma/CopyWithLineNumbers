@@ -4,7 +4,6 @@ Copy With Line Numbers Visual Studio Plugin
 * This is a plugin for Visual Studio which copies with line numbers to the clipboard.
 * The solution and project file are for Visual Studio 2017.
 * It works on Visual Studio 2015 and 2017.
-* I tested only community edition, so if it doesn't work on Professinal and Enterprise, let me know or send a pull request.
 * The copying text can be customizable by template. See the manual page for detail.
 
 ## Example
@@ -50,12 +49,18 @@ https://marketplace.visualstudio.com/items?itemName=tmatma.CopyWithLineNumbers-1
 
 ## Compile
 
-1. Open CopyWithLineNumbers.sln with Visaul Studio 2017
+1. Open CopyWithLineNumbers.sln with Visual Studio 2017
 2. Compile Solution
 
 ## Manual
 
+## English
+
 https://m-tmatma.github.io/VC/CopyWithLineNumbersManualEN.html
+
+## Japanese
+
+https://m-tmatma.github.io/VC/CopyWithLineNumbersManualJP.html
 
 ## Web Site (In Japanese)
 
