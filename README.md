@@ -54,11 +54,11 @@ https://marketplace.visualstudio.com/items?itemName=tmatma.CopyWithLineNumbers-1
 
 ## Manual
 
-## English
+### English
 
 https://m-tmatma.github.io/VC/CopyWithLineNumbersManualEN.html
 
-## Japanese
+### Japanese
 
 https://m-tmatma.github.io/VC/CopyWithLineNumbersManualJP.html
 
