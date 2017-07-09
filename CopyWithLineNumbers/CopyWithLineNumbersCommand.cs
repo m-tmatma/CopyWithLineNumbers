@@ -60,7 +60,7 @@ namespace CopyWithLineNumbers
                     else
                     {
                         var values = CreateValuesDictionary();
-                        values[Template.KeyNameForSelection] = string.Empty;
+                        values[Template.VariableForSelection] = string.Empty;
                         var formatString = configuration.FormatString;
 
                         var copyString = Template.ProcessTemplate(formatString, values);
@@ -196,7 +196,7 @@ namespace CopyWithLineNumbers
             var values = new Dictionary<string, string>();
             foreach (VariableManager variableManager in Template.Variables)
             {
-                values[variableManager.Name] = string.Empty;
+                values[variableManager.Variable] = string.Empty;
             }
 
             var dte = this.package.GetDTE();
@@ -237,14 +237,14 @@ namespace CopyWithLineNumbers
                         builder.Append(Environment.NewLine);
                         count++;
                     }
-                    values[Template.KeyNameForSelection] = builder.ToString();
+                    values[Template.VariableForSelection] = builder.ToString();
                 }
-                values[Template.KeyNameForTopLineNumber] = string.Format("{0}", selection.TopLine);
-                values[Template.KeyNameForBottomLineNumber] = string.Format("{0}", bottomLine);
+                values[Template.VariableForTopLineNumber] = string.Format("{0}", selection.TopLine);
+                values[Template.VariableForBottomLineNumber] = string.Format("{0}", bottomLine);
             }
-            values[Template.KeyNameForFileName] = Path.GetFileName(activeDocument.FullName);
-            values[Template.KeyNameForFullPath] = activeDocument.FullName;
-            values[Template.KeyNameForRelativePath] = CreateSolutionRelativePath(activeDocument.FullName);
+            values[Template.VariableForFileName] = Path.GetFileName(activeDocument.FullName);
+            values[Template.VariableForFullPath] = activeDocument.FullName;
+            values[Template.VariableForRelativePath] = CreateSolutionRelativePath(activeDocument.FullName);
             return values;
         }
 
