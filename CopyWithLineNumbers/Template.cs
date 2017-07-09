@@ -104,13 +104,9 @@ namespace CopyWithLineNumbers
             foreach (string match in substrings)
             {
                 replacedStrings[index] = match;
-                foreach (VariableManager variableManager in Variables)
+                if (values.ContainsKey(match))
                 {
-                    if (match == variableManager.Variable)
-                    {
-                        replacedStrings[index] = values[variableManager.Variable];
-                        break;
-                    }
+                    replacedStrings[index] = values[match];
                 }
                 index++;
             }
