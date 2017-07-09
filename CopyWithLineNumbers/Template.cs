@@ -13,9 +13,9 @@ namespace CopyWithLineNumbers
     internal class VariableManager
     {
         /// <summary>
-        /// Variable Name
+        /// Variable
         /// </summary>
-        internal string Name { get; set; }
+        internal string Variable { get; set; }
 
         /// <summary>
         /// Description for Variable
@@ -23,46 +23,14 @@ namespace CopyWithLineNumbers
         internal string Description { get; set; }
 
         /// <summary>
-        /// Variable
-        /// </summary>
-        internal string Variable { get; set; }
-
-        /// <summary>
-        /// Regular Expression for Variable
-        /// </summary>
-        internal Regex Regex { get; set; }
-
-        /// <summary>
-        /// Create a string for a variable
-        /// </summary>
-        /// <param name="variable">variable to be converted</param>
-        /// <returns></returns>
-        internal static string CreateVariable(string variable)
-        {
-            return "{" + variable + "}";
-        }
-
-        /// <summary>
-        /// Create a regular expression for a variable
-        /// </summary>
-        /// <param name="variable">variable to be converted</param>
-        /// <returns></returns>
-        private static string CreateRegularExpression(string variable)
-        {
-            return "{" + variable + "}";
-        }
-
-        /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="Name">Variable Name</param>
+        /// <param name="Variable">Variable</param>
         /// <param name="Description">Variable Descriotion</param>
-        internal VariableManager(string Name, string Description)
+        internal VariableManager(string Variable, string Description)
         {
-            this.Name = Name;
-            this.Variable = CreateVariable(Name);
+            this.Variable = Variable;
             this.Description = this.Variable + " : " + Description;
-            this.Regex = new Regex(CreateRegularExpression(Name), RegexOptions.Compiled);
         }
     }
 
@@ -74,50 +42,50 @@ namespace CopyWithLineNumbers
         /// <summary>
         /// Template Name for FileName
         /// </summary>
-        static internal string KeyNameForFileName = "FileName";
+        static internal string VariableForFileName = "{FileName}";
 
         /// <summary>
         /// Template Name for FullPath
         /// </summary>
-        static internal string KeyNameForFullPath = "FullPath";
+        static internal string VariableForFullPath = "{FullPath}";
 
         /// <summary>
         /// Template Name for Relative Path from opened Solution
         /// </summary>
-        static internal string KeyNameForRelativePath = "RelativePath";
+        static internal string VariableForRelativePath = "{RelativePath}";
 
         /// <summary>
         /// Template Name for Top Line Number
         /// </summary>
-        static internal string KeyNameForTopLineNumber = "TopLineNumber";
+        static internal string VariableForTopLineNumber = "{TopLineNumber}";
 
         /// <summary>
         /// Template Name for Bottom Line Number
         /// </summary>
-        static internal string KeyNameForBottomLineNumber = "BottomLineNumber";
+        static internal string VariableForBottomLineNumber = "{BottomLineNumber}";
 
         /// <summary>
         /// Template Name for Selection
         /// </summary>
-        static internal string KeyNameForSelection = "Selection";
+        static internal string VariableForSelection = "{Selection}";
 
         /// <summary>
         /// Template Variables
         /// </summary>
         internal readonly static VariableManager[] Variables = new VariableManager[]
         {
-            new VariableManager(KeyNameForFileName, "File Name"),
-            new VariableManager(KeyNameForFullPath, "Absolute File Path"),
-            new VariableManager(KeyNameForRelativePath, "Relative File Path from Solution File"),
-            new VariableManager(KeyNameForTopLineNumber, "The Top Line Number"),
-            new VariableManager(KeyNameForBottomLineNumber, "The Bottom Line Number"),
-            new VariableManager(KeyNameForSelection, "Selection of Active Document"),
+            new VariableManager(VariableForFileName, "File Name"),
+            new VariableManager(VariableForFullPath, "Absolute File Path"),
+            new VariableManager(VariableForRelativePath, "Relative File Path from Solution File"),
+            new VariableManager(VariableForTopLineNumber, "The Top Line Number"),
+            new VariableManager(VariableForBottomLineNumber, "The Bottom Line Number"),
+            new VariableManager(VariableForSelection, "Selection of Active Document"),
         };
 
         /// <summary>
         /// Default Template String
         /// </summary>
-        internal readonly static string DefaultFormatString = VariableManager.CreateVariable(KeyNameForSelection);
+        internal readonly static string DefaultFormatString = VariableForSelection;
 
         /// <summary>
         /// Replace the template variable to the values defined by dictionary
@@ -127,15 +95,22 @@ namespace CopyWithLineNumbers
         /// <returns></returns>
         internal static string ProcessTemplate(string template, Dictionary<string, string> values)
         {
-            foreach (VariableManager variableManager in Variables)
+            const string pattern = @"({\w+})";
+            string[] substrings = Regex.Split(template, pattern);
+
+            string[] replacedStrings = new string[substrings.Length];
+
+            int index = 0;
+            foreach (string match in substrings)
             {
-                if (!string.IsNullOrEmpty(variableManager.Name) && values.ContainsKey(variableManager.Name))
+                replacedStrings[index] = match;
+                if (values.ContainsKey(match))
                 {
-                    var value = values[variableManager.Name];
-                    template = variableManager.Regex.Replace(template, value);
+                    replacedStrings[index] = values[match];
                 }
+                index++;
             }
-            return template;
+            return string.Join(string.Empty, replacedStrings);
         }
     }
 }
