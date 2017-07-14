@@ -186,7 +186,43 @@ namespace CopyWithLineNumbers
                 return Path.GetFileName(path);
             }
         }
- 
+
+        /// <summary>
+        /// Format the selection
+        /// </summary>
+        /// <param name="selectionText">selected text</param>
+        /// <param name="topLine">the first line number of the selection</param>
+        /// <param name="bottomLine">the last line number of the selection</param>
+        /// <returns>formatted text</returns>
+        private string FormatSelection(string selectionText, int topLine, int bottomLine)
+        {
+            if (!string.IsNullOrEmpty(selectionText))
+            {
+                var builder = new StringBuilder();
+                var lines = selectionText.Split(new String[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+                var width = bottomLine.ToString().Length;
+                int count = 0;
+                foreach (string line in lines)
+                {
+                    if (count == lines.Length - 1)
+                    {
+                        if (string.IsNullOrEmpty(line))
+                        {
+                            break;
+                        }
+                    }
+                    var lineNumber = topLine + count;
+                    builder.Append(lineNumber.ToString().PadLeft(width));
+                    builder.Append(": ");
+                    builder.Append(line);
+                    builder.Append(Environment.NewLine);
+                    count++;
+                }
+                return builder.ToString();
+            }
+            return string.Empty;
+        }
+
         /// <summary>
         /// Create a dictionary for the template values
         /// </summary>
@@ -205,42 +241,10 @@ namespace CopyWithLineNumbers
             {
                 var selection = (EnvDTE.TextSelection)activeDocument.Selection;
                 var text = selection.Text;
-                var bottomLine = selection.TopLine;
-
-                if (!string.IsNullOrEmpty(text))
-                {
-                    var builder = new StringBuilder();
-                    var lines = text.Split(new String[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-                    if (lines.Length > 0)
-                    {
-                        bottomLine = selection.TopLine + lines.Length - 1;
-                        if (string.IsNullOrEmpty(lines[lines.Length - 1]))
-                        {
-                            bottomLine--;
-                        }
-                    }
-                    var width = bottomLine.ToString().Length;
-                    int count = 0;
-                    foreach (string line in lines)
-                    {
-                        if (count == lines.Length - 1)
-                        {
-                            if (string.IsNullOrEmpty(line))
-                            {
-                                break;
-                            }
-                        }
-                        var lineNumber = selection.TopLine + count;
-                        builder.Append(lineNumber.ToString().PadLeft(width));
-                        builder.Append(": ");
-                        builder.Append(line);
-                        builder.Append(Environment.NewLine);
-                        count++;
-                    }
-                    values[Template.VariableForSelection] = builder.ToString();
-                }
+                var formatedSelection = FormatSelection(text, selection.TopLine, selection.BottomLine);
+                values[Template.VariableForSelection] = formatedSelection;
                 values[Template.VariableForTopLineNumber] = string.Format("{0}", selection.TopLine);
-                values[Template.VariableForBottomLineNumber] = string.Format("{0}", bottomLine);
+                values[Template.VariableForBottomLineNumber] = string.Format("{0}", selection.BottomLine);
             }
             values[Template.VariableForFileName] = Path.GetFileName(activeDocument.FullName);
             values[Template.VariableForFullPath] = activeDocument.FullName;
