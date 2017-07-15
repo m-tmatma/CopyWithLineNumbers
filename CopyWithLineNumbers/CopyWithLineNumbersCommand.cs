@@ -13,6 +13,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace CopyWithLineNumbers
 {
@@ -188,13 +189,48 @@ namespace CopyWithLineNumbers
         }
 
         /// <summary>
+        /// Expand tab to spaces
+        /// </summary>
+        /// <param name="text">target text to be expanded</param>
+        /// <param name="tabSize">tab size</param>
+        /// <returns>formatted text</returns>
+        private string ExpandTabToSpaces(string text, int tabSize)
+        {
+            if (tabSize == 0)
+            {
+                return text;
+            }
+            const string pattern = "(\t)";
+            const string stringTab = "\t";
+            string[] splitTexts = Regex.Split(text, pattern);
+
+            var builder = new StringBuilder();
+            foreach (string stringElement in splitTexts)
+            {
+                if (string.Compare(stringElement, stringTab) == 0)
+                {
+                    int length = builder.Length;
+                    int paddedLength = ((length + tabSize) / tabSize) * tabSize;
+
+                    builder.Append(new string(' ', paddedLength - length));
+                }
+                else
+                {
+                    builder.Append(stringElement);
+                }
+            }
+            return builder.ToString();
+        }
+
+        /// <summary>
         /// Format the selection
         /// </summary>
         /// <param name="selectionText">selected text</param>
         /// <param name="topLine">the first line number of the selection</param>
         /// <param name="bottomLine">the last line number of the selection</param>
+        /// <param name="tabSize">tab size. if this is 0, doesn't expand tabs</param>
         /// <returns>formatted text</returns>
-        private string FormatSelection(string selectionText, int topLine, int bottomLine)
+        private string FormatSelection(string selectionText, int topLine, int bottomLine, int tabSize)
         {
             if (!string.IsNullOrEmpty(selectionText))
             {
@@ -214,7 +250,7 @@ namespace CopyWithLineNumbers
                     var lineNumber = topLine + count;
                     builder.Append(lineNumber.ToString().PadLeft(width));
                     builder.Append(": ");
-                    builder.Append(line);
+                    builder.Append(ExpandTabToSpaces(line, tabSize));
                     builder.Append(Environment.NewLine);
                     count++;
                 }
@@ -241,7 +277,7 @@ namespace CopyWithLineNumbers
             {
                 var selection = (EnvDTE.TextSelection)activeDocument.Selection;
                 var text = selection.Text;
-                var formatedSelection = FormatSelection(text, selection.TopLine, selection.BottomLine);
+                var formatedSelection = FormatSelection(text, selection.TopLine, selection.BottomLine, activeDocument.TabSize);
                 values[Template.VariableForSelection] = formatedSelection;
                 values[Template.VariableForTopLineNumber] = string.Format("{0}", selection.TopLine);
                 values[Template.VariableForBottomLineNumber] = string.Format("{0}", selection.BottomLine);
