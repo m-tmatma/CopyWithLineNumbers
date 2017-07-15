@@ -70,6 +70,11 @@ namespace CopyWithLineNumbers
         static internal string VariableForSelection = "{Selection}";
 
         /// <summary>
+        /// Template Name for Selection to be replaced a tab to spaces
+        /// </summary>
+        static internal string VariableForSelectionNoTab = "{SelectionNoTab}";
+
+        /// <summary>
         /// Template Variables
         /// </summary>
         internal readonly static VariableManager[] Variables = new VariableManager[]
@@ -77,9 +82,10 @@ namespace CopyWithLineNumbers
             new VariableManager(VariableForFileName, "File Name"),
             new VariableManager(VariableForFullPath, "Absolute File Path"),
             new VariableManager(VariableForRelativePath, "Relative File Path from Solution File"),
-            new VariableManager(VariableForTopLineNumber, "The Top Line Number"),
-            new VariableManager(VariableForBottomLineNumber, "The Bottom Line Number"),
-            new VariableManager(VariableForSelection, "Selection of Active Document"),
+            new VariableManager(VariableForTopLineNumber, "Top Line Number"),
+            new VariableManager(VariableForBottomLineNumber, "Bottom Line Number"),
+            new VariableManager(VariableForSelection, "Selection"),
+            new VariableManager(VariableForSelectionNoTab, "Selection replacing tab to spaces"),
         };
 
         /// <summary>
