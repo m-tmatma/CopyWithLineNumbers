@@ -39,11 +39,6 @@
       <Group guid="guidVSPackageCmdSet" id="MyMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
       </Group>
-      
-      <!-- Show Context Menu at Code Editor -->
-      <Group guid="guidVSPackageCmdSet" id="MyMenuGroup" priority="0x0600">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN"/>
-      </Group>
     </Groups>
 
     <!--Buttons section. -->
@@ -80,6 +75,24 @@
     </Bitmaps>
   </Commands>
 
+  <!-- define context menu item -->
+  <CommandPlacements>
+    <!-- for code -->
+    <CommandPlacement guid="guidVSPackageCmdSet" id="MyMenuGroup" priority="0x0600">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN" />
+    </CommandPlacement>
+
+    <!-- for css file -->
+    <CommandPlacement guid="guidVSPackageCmdSet" id="MyMenuGroup" priority="0x0600">
+      <Parent guid="guidCSSDocumentContextMenu" id="idCSSContextMenu" />
+    </CommandPlacement>
+    
+    <!-- for HTML file -->
+    <CommandPlacement guid="guidVSPackageCmdSet" id="MyMenuGroup" priority="0x0600">
+      <Parent guid="guidHTMLDocumentContextMenu" id="idHTMLContextMenu" />
+    </CommandPlacement>
+  </CommandPlacements>
+
   <Symbols>
     <!-- This is the package guid. -->
     <GuidSymbol name="guidVSPackage" value="{c43ac2b7-f6f8-4fb9-a537-eeb29a7a03eb}" />
@@ -87,6 +100,7 @@
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidVSPackageCmdSet" value="{02e696a1-06f8-4e96-afcd-66c98176b584}">
       <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="CSSID" value="243" />
       <IDSymbol name="CopyWithLineNumbersCommandId" value="0x0100" />
     </GuidSymbol>
 
@@ -97,6 +111,18 @@
       <IDSymbol name="bmpPicX" value="4" />
       <IDSymbol name="bmpPicArrows" value="5" />
       <IDSymbol name="bmpPicStrikethrough" value="6" />
+    </GuidSymbol>
+    
+    <!-- GUID and ID for not defined Visual Studio SDK -->
+    
+    <!-- for css file -->
+    <GuidSymbol name="guidCSSDocumentContextMenu" value="{64da400e-b4ad-4d67-aa92-4b7acb01ecd5}">
+      <IDSymbol name="idCSSContextMenu" value="0x2" />
+    </GuidSymbol>
+
+    <!-- for html file -->
+    <GuidSymbol name="guidHTMLDocumentContextMenu" value="{78f03954-2fb8-4087-8ce7-59d71710b3bb}">
+      <IDSymbol name="idHTMLContextMenu" value="0x1" />
     </GuidSymbol>
   </Symbols>
 </CommandTable>
