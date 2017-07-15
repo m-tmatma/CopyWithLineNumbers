@@ -86,10 +86,15 @@
     <CommandPlacement guid="guidVSPackageCmdSet" id="MyMenuGroup" priority="0x0600">
       <Parent guid="guidCSSDocumentContextMenu" id="idCSSContextMenu" />
     </CommandPlacement>
-    
+
     <!-- for HTML file -->
     <CommandPlacement guid="guidVSPackageCmdSet" id="MyMenuGroup" priority="0x0600">
       <Parent guid="guidHTMLDocumentContextMenu" id="idHTMLContextMenu" />
+    </CommandPlacement>
+
+    <!-- for json file -->
+    <CommandPlacement guid="guidVSPackageCmdSet" id="MyMenuGroup" priority="0x0600">
+      <Parent guid="guidJSONDocumentContextMenu" id="idJSONContextMenu" />
     </CommandPlacement>
   </CommandPlacements>
 
@@ -123,6 +128,11 @@
     <!-- for html file -->
     <GuidSymbol name="guidHTMLDocumentContextMenu" value="{78f03954-2fb8-4087-8ce7-59d71710b3bb}">
       <IDSymbol name="idHTMLContextMenu" value="0x1" />
+    </GuidSymbol>
+
+    <!-- for json file -->
+    <GuidSymbol name="guidJSONDocumentContextMenu" value="{f718ca06-cf4f-4a0c-9106-e79e9ee5e7cd}">
+      <IDSymbol name="idJSONContextMenu" value="0x3" />
     </GuidSymbol>
   </Symbols>
 </CommandTable>
