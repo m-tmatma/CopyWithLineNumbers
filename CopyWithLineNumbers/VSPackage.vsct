@@ -105,7 +105,6 @@
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidVSPackageCmdSet" value="{02e696a1-06f8-4e96-afcd-66c98176b584}">
       <IDSymbol name="MyMenuGroup" value="0x1020" />
-      <IDSymbol name="CSSID" value="243" />
       <IDSymbol name="CopyWithLineNumbersCommandId" value="0x0100" />
     </GuidSymbol>
 
