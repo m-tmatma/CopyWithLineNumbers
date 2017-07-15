@@ -277,8 +277,10 @@ namespace CopyWithLineNumbers
             {
                 var selection = (EnvDTE.TextSelection)activeDocument.Selection;
                 var text = selection.Text;
-                var formatedSelection = FormatSelection(text, selection.TopLine, selection.BottomLine, activeDocument.TabSize);
+                var formatedSelection = FormatSelection(text, selection.TopLine, selection.BottomLine, 0);
+                var formatedSelectionNoTab = FormatSelection(text, selection.TopLine, selection.BottomLine, activeDocument.TabSize);
                 values[Template.VariableForSelection] = formatedSelection;
+                values[Template.VariableForSelectionNoTab] = formatedSelectionNoTab;
                 values[Template.VariableForTopLineNumber] = string.Format("{0}", selection.TopLine);
                 values[Template.VariableForBottomLineNumber] = string.Format("{0}", selection.BottomLine);
             }
