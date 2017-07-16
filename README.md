@@ -63,13 +63,7 @@ download from the following links
 
 ## Manual
 
-### English
-
-https://m-tmatma.github.io/VC/CopyWithLineNumbersManualEN.html
-
-### Japanese
-
-https://m-tmatma.github.io/VC/CopyWithLineNumbersManualJP.html
-
+* [English](https://m-tmatma.github.io/VC/CopyWithLineNumbersManualEN.html)
+* [Japanese](https://m-tmatma.github.io/VC/CopyWithLineNumbersManualJP.html)
 
 
