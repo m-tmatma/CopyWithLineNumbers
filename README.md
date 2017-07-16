@@ -49,10 +49,17 @@ download from the following links
 
 	> git clone https://github.com/m-tmatma/CopyWithLineNumbers.git
 
-## Compile
+## Build
+
+### Build by IDE
 
 1. Open CopyWithLineNumbers.sln with Visual Studio 2017
-2. Compile Solution
+1. Compile Solution
+
+### Build by Jenkins
+
+1. "C:\Program Files (x86)\NuGet\nuget.exe" restore CopyWithLineNumbers.sln
+1. "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.com" CopyWithLineNumbers.sln /rebuild "Release|Any CPU"
 
 ## Manual
 
@@ -64,6 +71,5 @@ https://m-tmatma.github.io/VC/CopyWithLineNumbersManualEN.html
 
 https://m-tmatma.github.io/VC/CopyWithLineNumbersManualJP.html
 
-## Web Site (In Japanese)
 
-https://m-tmatma.github.io/VC/CopyWithLineNumbers.html
+
