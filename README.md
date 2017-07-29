@@ -1,8 +1,7 @@
 # CopyWithLineNumbers
 Copy With Line Numbers Visual Studio Plugin
 
-[![Build status](https://ci.appveyor.com/api/projects/status/t4cfsw9dli9rr5fr?svg=true)](https://ci.appveyor.com/project/MasaruTsuchiyama/copywithlinenumbers)
-
+[![Build status](https://ci.appveyor.com/api/projects/status/t4cfsw9dli9rr5fr/branch/master?svg=true)](https://ci.appveyor.com/project/MasaruTsuchiyama/copywithlinenumbers/branch/master)
 
 * This is a plugin for Visual Studio which copies with line numbers to the clipboard.
 * The solution and project file are for Visual Studio 2017.
