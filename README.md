@@ -45,7 +45,7 @@ This is an example text which is sent to clipboard.
 download from the following links
 
 * [GitHub Release](https://github.com/m-tmatma/CopyWithLineNumbers/releases)
-* [Microsoft Market Place](https://marketplace.visualstudio.com/items?itemName=tmatma.CopyWithLineNumbers-18783)
+* [Microsoft Market Place](https://marketplace.visualstudio.com/search?term=publisher%3A%22tmatma%22&target=VS&category=All%20categories&vsVersion=&sortBy=Relevance)
 
 ## Get Source Code
 
